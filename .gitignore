@@ -1,0 +1,11 @@
+/.gradle/
+/.project
+/.settings/
+/.idea
+/log
+/app
+/admin
+/mini-app/
+/repository
+/.terminalname
+/core/build

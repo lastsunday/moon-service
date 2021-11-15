@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+	xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.9.xsd">
+
+	<changeSet author="lastsunday" id="1_0-1">
+		<createTable remarks="用户表" tableName="user">
+			<column name="id" type="VARCHAR(255)">
+				<constraints nullable="false" primaryKey="true" />
+			</column>
+			<column name="account" remarks="用户账号" type="VARCHAR(30)">
+				<constraints nullable="false" unique="true" />
+			</column>
+			<column name="name" remarks="用户名" type="VARCHAR(30)" />
+			<column name="type" remarks="用户类型（0系统用户）" type="INT" />
+			<column name="email" remarks="用户邮箱" type="VARCHAR(50)" />
+			<column name="phone" remarks="手机号码" type="VARCHAR(11)" />
+			<column name="gender" remarks="用户性别（0男 1女 2未知）" type="INT" />
+			<column name="password" remarks="密码" type="VARCHAR(100)" />
+			<column name="status" remarks="帐号状态（0启用 1禁用）" type="INT"
+				defaultValueNumeric="0" />
+			<column name="avatar" remarks="头像" type="VARCHAR(255)" />
+			<column name="login_ip" remarks="最后登录IP" type="VARCHAR(50)" />
+			<column name="login_time" remarks="最后登录时间" type="datetime" />
+			<column name="create_by" remarks="创建者" type="VARCHAR(30)" />
+			<column name="create_time" remarks="创建时间" type="datetime" />
+			<column name="update_by" remarks="更新者" type="VARCHAR(30)" />
+			<column name="update_time" remarks="更新时间" type="datetime" />
+			<column name="remark" remarks="备注" type="VARCHAR(500)" />
+		</createTable>
+		<createTable remarks="角色表" tableName="role">
+			<column name="id" type="VARCHAR(255)">
+				<constraints nullable="false" primaryKey="true" />
+			</column>
+			<column name="name" type="VARCHAR(63)">
+				<constraints nullable="false" />
+			</column>
+			<column name="desc" type="VARCHAR(1023)" />
+			<column defaultValueNumeric="1" name="status" remarks="0启用1禁用"
+				type="INT">
+				<constraints nullable="false" />
+			</column>
+			<column name="create_by" remarks="创建者" type="VARCHAR(30)" />
+			<column defaultValueComputed="NULL" name="create_time" remarks="创建时间"
+				type="datetime" />
+			<column name="update_by" remarks="更新者" type="VARCHAR(30)" />
+			<column defaultValueComputed="NULL" name="update_time" remarks="更新时间"
+				type="datetime" />
+			<column name="remark" remarks="备注" type="VARCHAR(500)" />
+		</createTable>
+		<createTable remarks="用户和角色关联表" tableName="user_role">
+			<column name="id" type="VARCHAR(255)">
+				<constraints nullable="false" primaryKey="true" />
+			</column>
+			<column name="user_id" remarks="用户ID" type="VARCHAR(255)">
+				<constraints nullable="false" primaryKey="true" />
+			</column>
+			<column name="role_id" remarks="角色ID" type="VARCHAR(255)">
+				<constraints nullable="false" primaryKey="true" />
+			</column>
+			<column name="create_by" remarks="创建者" type="VARCHAR(30)" />
+			<column defaultValueComputed="NULL" name="create_time" remarks="创建时间"
+				type="datetime" />
+			<column name="update_by" remarks="更新者" type="VARCHAR(30)" />
+			<column defaultValueComputed="NULL" name="update_time" remarks="更新时间"
+				type="datetime" />
+		</createTable>
+		<createTable remarks="权限表" tableName="role_permission">
+			<column name="id" type="VARCHAR(255)">
+				<constraints nullable="false" primaryKey="true" />
+			</column>
+			<column name="role_id" remarks="角色ID" type="VARCHAR(255)">
+				<constraints nullable="false" />
+			</column>
+			<column name="permission" type="VARCHAR(63)" />
+			<column name="create_by" remarks="创建者" type="VARCHAR(30)" />
+			<column defaultValueComputed="NULL" name="create_time" remarks="创建时间"
+				type="datetime" />
+			<column name="update_by" remarks="更新者" type="VARCHAR(30)" />
+			<column defaultValueComputed="NULL" name="update_time" remarks="更新时间"
+				type="datetime" />
+		</createTable>
+		<modifySql dbms="mysql,mariadb">
+			<append
+				value="ENGINE=INNODB DEFAULT CHARSET utf8mb4 COLLATE utf8mb4_unicode_ci" />
+		</modifySql>
+	</changeSet>
+
+	<changeSet author="lastsunday" id="1_0-2">
+		<insert tableName="role">
+			<column name="id" value="ACLYdWuNqIQOMkr9CgJxD" />
+			<column name="name" value="SuperAdmin" />
+			<column name="desc" value="SuperAdmin" />
+			<column name="status" valueNumeric="0" />
+		</insert>
+		<insert tableName="role_permission">
+			<column name="id" value="VaPuTh32bRWyasGLhQM4x" />
+			<column name="role_id" value="ACLYdWuNqIQOMkr9CgJxD" />
+			<column name="permission" value="*" />
+		</insert>
+		<insert tableName="user">
+			<column name="id" value="ZLMWz8sG5AflsY37x5Q6k" />
+			<column name="account" value="admin" />
+			<column name="name" value="admin" />
+			<column name="type" valueNumeric="0" />
+			<column name="gender" valueNumeric="0" />
+			<column name="password"
+				value="$2a$10$4KVSb.LJ/0dbtRt8ulEgQukv9ZmZ8oarxrMtkalNHK1PNdnMHlCeW" />
+			<column name="status" valueNumeric="0" />
+		</insert>
+		<insert tableName="user_role">
+			<column name="id" value="5XjaSj6ppdd10d6wE561CH" />
+			<column name="user_id" value="ZLMWz8sG5AflsY37x5Q6k" />
+			<column name="role_id" value="ACLYdWuNqIQOMkr9CgJxD" />
+		</insert>
+	</changeSet>
+
+	<changeSet author="lastsunday" id="1_0-3">
+		<createTable remarks="操作日志" tableName="operation_log">
+			<column name="id" type="VARCHAR(255)">
+				<constraints nullable="false" primaryKey="true" />
+			</column>
+			<column name="operator_id" remarks="操作人员编号" type="VARCHAR(255)" />
+			<column name="create_time" remarks="创建时间" type="DATETIME" />
+			<column name="function_module" remarks="功能模块" type="INT" />
+			<column name="operation" remarks="操作类型" type="INT" />
+			<column name="operator_account" remarks="操作人员账号" type="VARCHAR(255)" />
+			<column name="path" remarks="路径" type="VARCHAR(255)" />
+			<column name="ip" remarks="ip" type="VARCHAR(255)" />
+			<column name="request" remarks="请求参数" type="TEXT" />
+			<column name="response" remarks="返回结果" type="TEXT" />
+			<column name="error_code" remarks="错误码" type="INT" />
+			<column name="error_message" remarks="错误信息" type="TEXT" />
+		</createTable>
+		<modifySql dbms="mysql,mariadb">
+			<append
+				value="ENGINE=INNODB DEFAULT CHARSET utf8mb4 COLLATE utf8mb4_unicode_ci" />
+		</modifySql>
+	</changeSet>
+
+</databaseChangeLog>

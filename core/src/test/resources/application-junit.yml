@@ -1,0 +1,99 @@
+server:
+    address: "${MOON_SERVER_ADDRESS:0.0.0.0}"
+    port: "${MOON_SERVER_PORT:9211}"
+    servlet:
+        context-path: "${MOON_SERVER_SERVLET_CONTEXT_PATH:/moon}"
+spring:
+    jackson:
+        date-format: "${MOON_SPRING_JACKSON_DATE_FORMAT:yyyy-MM-dd'T'HH:mm:ss.SSSX}"
+    servlet:
+        multipart:
+            max-file-size: "${MOON_SPRING_SERVLET_MULTIPART_MAX_FILE_SIZE:10MB}"
+            max-request-size: "${MOON_SPRING_SERVLET_MULTIPART_MAX_REQUEST_SIZE:100MB}"
+    jmx:
+        unique-names: "${MOON_JMX_UNIQUE_NAMES:true}"
+    datasource:
+        url: "${MOON_SPRING_DATASOURCE_URL:jdbc:h2:mem:unimall;MODE=MYSQL;DB_CLOSE_DELAY=-1;}"
+        username: "${MOON_SPRING_DATASOURCE_USERNAME:}"
+        password: "${MOON_SPRING_DATASOURCE_PASSWORD:}"
+    liquibase:
+        enabled: "${MOON_SPRING_LIQUIBASE_ENABLED:true}"
+        change-log: "${MOON_SPRING_LIQUIBASE_CHANGE_LOG:classpath:db/changelog/db.changelog-master.xml}"
+    redis:
+        database: "${MOON_SPRING_REDIS_DATABASE:4}"
+        host: "${MOON_SPRING_REDIS_HOST:localhost}"
+        port: "${MOON_SPRING_REDIS_PORT:6379}"
+        password: "${MOON_SPRING_REDIS_PASSWORD:}"
+    user-redis:
+        database: "${MOON_SPRING_USER_REDIS_DATABASE:5}"
+        host: "${MOON_SPRING_USER_REDIS_HOST:localhost}"
+        port: "${MOON_SPRING_USER_REDIS_PORT:6379}"
+        password: "${MOON_SPRING_USER_REDIS_PASSWORD:}"
+    lock-redis:
+        database: "${MOON_SPRING_LOCK_REDIS_DATABASE:6}"
+        host: "${MOON_SPRING_LOCK_REDIS_HOST:localhost}"
+        port: "${MOON_SPRING_LOCK_REDIS_PORT:6379}"
+        password: "${MOON_SPRING_LOCK_REDIS_PASSWORD:}"
+#日志配置
+logging:
+    file:
+        name: "${MOON_LOGGING_FILE_NAME:log/app.log}"
+    level:
+        root: "${MOON_LOGGING_LEVEL:info}"
+    logback:
+        rollingpolicy:
+            #是否在程序启动时清理日志备份文件
+            clean-history-on-start: "${MOON_LOGGING_LOGBACK_ROLLINGPOLICY_CLEAN_HISTORY_ON_START:true}"
+            #日志文件名格式
+            file-name-pattern: "${MOON_LOGGING_LOGBACK_ROLLINGPOLICY_FILE_NAME_PATTERN:${LOG_FILE}.%d{yyyy-MM-dd}.%i.gz}"
+            #单个日志文件最大尺寸
+            max-file-size: "${MOON_LOGGING_LOGBACK_ROLLINGPOLICY_MAX_FILE_SIZE:10MB}"
+            #日志最大保留天数
+            max-history: "${MOON_LOGGING_LOGBACK_ROLLINGPOLICY_MAX_HISTORY:60}"
+            #日志备份文件总容量限制，0B为不限制
+            total-size-cap: "${MOON_LOGGING_LOGBACK_ROLLINGPOLICY_TOTAL_SIZE_CAP:0B}"
+app:
+    #是否开启swagger
+    swagger:
+        enable: "${MOON_APP_SWAGGER_ENABLE:false}"
+    web:
+        root:
+            #Web根路径默认跳转路径
+            redirect: "${MOON_APP_WEB_ROOT_REDIRECT:/app}"
+        app:
+            #是否允许从Web访问app前端
+            enable: "${MOON_APP_WEB_APP_ENABLE:true}"
+        miniApp:
+            #是否允许从Web访问miniApp前端
+            enable: "${MOON_APP_WEB_MINI_APP_ENABLE:true}"
+        admin:
+            #是否允许从Web访问admin前端
+            enable: "${MOON_APP_WEB_ADMIN_ENABLE:true}"
+        repository:
+            #是否允许从Web访问repository目录
+            enable: "${MOON_APP_WEB_REPOSITORY_ENABLE:true}"
+    service:
+        #是否在Service response中显示错误详情
+        showErrorDetail: "${MOON_APP_SERVICE_SHOW_ERROR_DETAIL:false}"
+        token:
+            #Service令牌Header Key
+            header: "${MOON_APP_SERVICE_TOKEN_HEADER:Authorization}"
+            #Service令牌密钥
+            secret: "${MOON_APP_SERVICE_TOKEN_SECRET:6711b7cbfe8551fefc60e7d9bd44da4f2}"
+    module:
+        client:
+            #是否启用用户登录的验证码校验
+            loginCaptchaCheckingEnable: "${MOON_APP_MODULE_CLIENT_LOGIN_CAPTCHA_CHECKING_ENABLE:true}"
+    remote:
+        service:
+            enable: "${MOON_APP_REMOTE_SERVICE_ENABLE:false}"
+            #远程服务地址
+            url: "${MOON_APP_REMOTE_SERVICE_URL:}"
+            #远程服务授权Header Key，默认值：X-API-Key
+            authHeader: "${MOON_APP_REMOTE_SERVICE_AUTH_HEADER:}"
+            #远程服务授权令牌
+            authToken: "${MOON_APP_REMOTE_SERVICE_AUTH_TOKEN:}"
+mybatis:
+    config-location: mybatis-config.xml
+mybatis-plus:
+    typeEnumsPackage: com.github.lastsunday.moon.data.enums

@@ -1,0 +1,57 @@
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.github.lastsunday.moon.data.mapper.UserMapper">
+
+	<resultMap type="com.github.lastsunday.moon.data.domain.dto.UserDTO"
+		id="UserDTOResultMap">
+		<id column="id" property="id" />
+		<id column="account" property="account" />
+		<id column="name" property="name" />
+		<id column="status" property="status" />
+		<id column="gender" property="gender" />
+		<id column="email" property="email" />
+		<id column="phone" property="phone" />
+		<id column="remark" property="remark" />
+		<collection property="roleIds" ofType="java.lang.String">
+			<constructor>
+				<arg column="role_id" />
+			</constructor>
+		</collection>
+	</resultMap>
+
+
+	<select id="selectUserDetail"
+		parameterType="com.github.lastsunday.moon.data.mapper.user.SelectUserDetailParam"
+		resultMap="UserDTOResultMap">
+		SELECT user.id AS
+		id,user.account AS account,user.name AS
+		name,user.gender AS
+		gender,user.email
+		AS email,user.phone AS
+		phone,user.remark AS
+		remark,user.status AS
+		status,user_role.role_id AS
+		role_id FROM user LEFT OUTER
+		JOIN
+		user_role ON user.id
+		=
+		user_role.user_id
+		<where>
+			<if test="account !=null and account != ''">
+				AND user.account like concat('%',#{account},'%')
+			</if>
+			<if test="roleIds !=null and roleIds.size >0">
+				AND
+				user_role.role_id in
+				<foreach item="item" index="index" collection="roleIds"
+					open="(" separator="," close=")">
+					#{item}
+				</foreach>
+			</if>
+		</where>
+		ORDER BY user.create_time DESC,user.update_time DESC
+	</select>
+
+</mapper>

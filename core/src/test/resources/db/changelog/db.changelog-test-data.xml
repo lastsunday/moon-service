@@ -1,0 +1,32 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog
+	xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+	xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+	xmlns:pro="http://www.liquibase.org/xml/ns/pro"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-3.9.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.9.xsd">
+
+	<changeSet author="lastsunday" id="test-1">
+		<insert tableName="role">
+			<column name="id" value="6Hu4LVD0IOkTplHZxRarjZ" />
+			<column name="name" value="Guest" />
+			<column name="desc" value="Guest" />
+			<column name="status" valueNumeric="0" />
+		</insert>
+		<insert tableName="user">
+			<column name="id" value="6nWk6F8UrRIDzRO2Vi12HM" />
+			<column name="account" value="guest" />
+			<column name="name" value="guest" />
+			<column name="type" valueNumeric="0" />
+			<column name="gender" valueNumeric="0" />
+			<column name="password"
+				value="$2a$10$S63dTqmc5Zt1girjTfgreO17FvhV9iYZjTyS7A95SW9ziLkJx1iuW" />
+			<column name="status" valueNumeric="0" />
+		</insert>
+		<insert tableName="user_role">
+			<column name="id" value="6wKrMeVvON0PUbrGfWvcXC" />
+			<column name="user_id" value="6nWk6F8UrRIDzRO2Vi12HM" />
+			<column name="role_id" value="6Hu4LVD0IOkTplHZxRarjZ" />
+		</insert>
+	</changeSet>
+</databaseChangeLog>
