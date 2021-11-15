@@ -22,6 +22,7 @@ before_script:
 build:
   stage: build
   script:
+    - chmod +x ./gradlew
     - ./gradlew clean bootJar
     - mkdir service
     - mv core/build/libs/service-core.jar service/service-core.jar
