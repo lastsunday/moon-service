@@ -23,7 +23,7 @@ build:
   stage: build
   script:
     - chmod +x ./gradlew
-    - ./gradlew clean bootJar
+    - ./gradlew clean test bootJar
     - mkdir service
     - mv core/build/libs/service-core.jar service/service-core.jar
   artifacts:
