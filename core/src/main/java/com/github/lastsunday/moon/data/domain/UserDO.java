@@ -4,9 +4,10 @@ import java.util.Date;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.github.lastsunday.moon.data.domain.dto.UserDTO;
 
 @TableName("user")
-public class UserDO extends DefaultDO {
+public class UserDO extends DefaultDO<UserDTO> {
 
 	/** 用户账号 */
 	private String account;
@@ -142,4 +143,24 @@ public class UserDO extends DefaultDO {
 		this.remark = remark;
 	}
 
+	@Override
+	public UserDTO toData() {
+		UserDTO result = new UserDTO();
+		fillData(result);
+		result.setAccount(getAccount());
+		result.setName(getName());
+		result.setType(getType());
+		result.setEmail(getEmail());
+		result.setPhone(getPhone());
+		result.setGender(getGender());
+		result.setAvatar(getAvatar());
+//		result.setPassword();
+		result.setStatus(getStatus());
+		result.setLoginIp(getLoginIp());
+		result.setLoginTime(getLoginTime());
+		result.setRemark(getRemark());
+//		result.setRoleIds();
+//		result.setPermissions();
+		return result;
+	}
 }

@@ -55,12 +55,14 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-aop")
 	implementation("com.devskiller.friendly-id:friendly-id:1.1.0")
 	implementation("com.github.oshi:oshi-core:5.8.3")
+	implementation("com.github.ua-parser:uap-java:1.5.2")
 	// util end
 	// dev start
 	developmentOnly("org.springframework.boot:spring-boot-devtools")
 	// dev end
 	// test start
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
+	testImplementation("org.springframework.security:spring-security-test")
 	testImplementation("junit:junit")
 	testImplementation("com.h2database:h2")
 	// test end

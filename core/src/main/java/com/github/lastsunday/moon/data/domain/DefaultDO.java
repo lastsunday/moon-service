@@ -4,8 +4,10 @@ import java.util.Date;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.github.lastsunday.moon.data.ToData;
+import com.github.lastsunday.moon.data.domain.dto.DefaultDTO;
 
-public abstract class DefaultDO {
+public abstract class DefaultDO<T> implements ToData<T> {
 
 	@TableId
 	private String id;
@@ -66,4 +68,11 @@ public abstract class DefaultDO {
 		this.updateTime = updateTime;
 	}
 
+	public void fillData(DefaultDTO dto){
+		dto.setId(getId());
+		dto.setCreateBy(getCreateBy());
+		dto.setCreateTime(getCreateTime());
+		dto.setUpdateBy(getUpdateBy());
+		dto.setUpdateTime(getUpdateTime());
+	}
 }

@@ -2,9 +2,10 @@ package com.github.lastsunday.moon.data.domain;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.github.lastsunday.moon.data.domain.dto.RoleDTO;
 
 @TableName("role")
-public class RoleDO extends DefaultDO {
+public class RoleDO extends DefaultDO<RoleDTO> {
 
 	private String name;
 	@TableField("`desc`")
@@ -45,4 +46,14 @@ public class RoleDO extends DefaultDO {
 		this.remark = remark;
 	}
 
+	@Override
+	public RoleDTO toData() {
+		RoleDTO result = new RoleDTO();
+		fillData(result);
+		result.setName(getName());
+		result.setDesc(getDesc());
+		result.setStatus(getStatus());
+		result.setRemark(getRemark());
+		return result;
+	}
 }

@@ -134,7 +134,7 @@ public class ClientControllerImpl implements ClientController {
 
 	@Override
 	@RequestMapping(path = "resetPassword", method = RequestMethod.POST)
-	@Transactional
+	@Transactional(rollbackFor = Exception.class)
 	public void resetPassword(@RequestBody @Valid ClientResetPasswordParamDTO param) {
 		LoginUser loginUser = SecurityUtils.getLoginUser();
 		UserDO userDo = userMapper.selectById(loginUser.getId());

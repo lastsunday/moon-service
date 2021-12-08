@@ -83,7 +83,7 @@ app:
     module:
         client:
             #是否启用用户登录的验证码校验
-            loginCaptchaCheckingEnable: "${MOON_APP_MODULE_CLIENT_LOGIN_CAPTCHA_CHECKING_ENABLE:true}"
+            loginCaptchaCheckingEnable: "${MOON_APP_MODULE_CLIENT_LOGIN_CAPTCHA_CHECKING_ENABLE:false}"
     remote:
         service:
             enable: "${MOON_APP_REMOTE_SERVICE_ENABLE:false}"
