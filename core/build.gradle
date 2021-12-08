@@ -69,6 +69,11 @@ dependencies {
 	// test end
 }
 
+test{
+	include(["**"])
+	exclude(["MainApplicationTest","**/Abstract**"])
+}
+
 tasks.withType(JavaCompile) {
 	options.encoding = "UTF-8"
 }

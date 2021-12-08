@@ -23,13 +23,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ComponentScan({"com.github.lastsunday.moon"})
 @WebAppConfiguration
 @SpringBootTest()
-public class AbstractControllerTest extends AbstractWebTest{
+public class AbstractControllerTest extends AbstractWebTest {
 
-    protected void loginAsAdmin() throws Exception{
-        login("admin","admin123");
+    protected void loginAsAdmin() throws Exception {
+        login("admin", "admin123");
     }
 
-    protected void login(String account,String password) throws Exception{
+    protected void login(String account, String password) throws Exception {
         this.token = null;
         ClientLoginParamDTO param = new ClientLoginParamDTO();
         param.setAccount(account);

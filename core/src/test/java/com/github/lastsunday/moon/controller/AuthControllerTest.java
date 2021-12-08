@@ -8,13 +8,13 @@ import org.junit.Test;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-public class AuthControllerTest extends AbstractControllerTest{
+public class AuthControllerTest extends AbstractControllerTest {
 
     @Test
     public void testLoginAdmin() throws Exception {
         loginAsAdmin();
         ClientInfoResultDTO clientInfoResultDTO = readResponse(doPost("/api/client/info").andExpect(status().isOk()), ClientInfoResultDTO.class);
-        Assert.assertEquals("admin",clientInfoResultDTO.getName());
+        Assert.assertEquals("admin", clientInfoResultDTO.getName());
     }
 
     @Test
@@ -35,10 +35,10 @@ public class AuthControllerTest extends AbstractControllerTest{
         param.setCurrentPassword(newPassword);
         param.setNewPassword(oldPassword);
         //reset password
-        doPost("/api/client/resetPassword",param).andExpect(status().isBadRequest());
+        doPost("/api/client/resetPassword", param).andExpect(status().isBadRequest());
         param.setCurrentPassword(oldPassword);
         param.setNewPassword(newPassword);
-        doPost("/api/client/resetPassword",param).andExpect(status().isOk());
+        doPost("/api/client/resetPassword", param).andExpect(status().isOk());
         //logout
         doPost("/api/client/logout").andExpect(status().isOk());
         //login with old password
@@ -46,9 +46,9 @@ public class AuthControllerTest extends AbstractControllerTest{
         clientLoginParamDTO.setAccount(account);
         clientLoginParamDTO.setPassword(oldPassword);
         doPost("/api/client/login", clientLoginParamDTO).andExpect(status().isBadRequest());
-        login(account,newPassword);
+        login(account, newPassword);
         ClientInfoResultDTO clientInfoResultDTO = readResponse(doPost("/api/client/info").andExpect(status().isOk()), ClientInfoResultDTO.class);
-        Assert.assertEquals(account,clientInfoResultDTO.getName());
+        Assert.assertEquals(account, clientInfoResultDTO.getName());
     }
 
 }

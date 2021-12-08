@@ -107,7 +107,7 @@ public abstract class AbstractWebTest {
 
     protected void setJwtToken(MockHttpServletRequestBuilder request) {
         if (this.token != null) {
-            request.header(appConfig.getService().getToken().getHeader(),this.token);
+            request.header(appConfig.getService().getToken().getHeader(), this.token);
         }
     }
 
