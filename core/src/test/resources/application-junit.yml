@@ -22,17 +22,17 @@ spring:
     redis:
         database: "${MOON_SPRING_REDIS_DATABASE:4}"
         host: "${MOON_SPRING_REDIS_HOST:localhost}"
-        port: "${MOON_SPRING_REDIS_PORT:6379}"
+        port: "${MOON_SPRING_REDIS_PORT:26379}"
         password: "${MOON_SPRING_REDIS_PASSWORD:}"
     user-redis:
         database: "${MOON_SPRING_USER_REDIS_DATABASE:5}"
         host: "${MOON_SPRING_USER_REDIS_HOST:localhost}"
-        port: "${MOON_SPRING_USER_REDIS_PORT:6379}"
+        port: "${MOON_SPRING_USER_REDIS_PORT:26379}"
         password: "${MOON_SPRING_USER_REDIS_PASSWORD:}"
     lock-redis:
         database: "${MOON_SPRING_LOCK_REDIS_DATABASE:6}"
         host: "${MOON_SPRING_LOCK_REDIS_HOST:localhost}"
-        port: "${MOON_SPRING_LOCK_REDIS_PORT:6379}"
+        port: "${MOON_SPRING_LOCK_REDIS_PORT:26379}"
         password: "${MOON_SPRING_LOCK_REDIS_PASSWORD:}"
 #日志配置
 logging:

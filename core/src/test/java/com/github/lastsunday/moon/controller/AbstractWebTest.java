@@ -1,8 +1,7 @@
 package com.github.lastsunday.moon.controller;
 
 import com.github.lastsunday.moon.config.AppConfig;
-import org.junit.Assert;
-import org.junit.Before;
+import org.junit.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +15,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.web.context.WebApplicationContext;
+import redis.embedded.RedisServer;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -46,6 +46,8 @@ public abstract class AbstractWebTest {
 
     protected MockMvc mockMvc;
 
+    private static RedisServer redisServer;
+
     @Autowired
     void setConverters(HttpMessageConverter<?>[] converters) {
 
@@ -63,6 +65,17 @@ public abstract class AbstractWebTest {
                 this.mappingJackson2HttpMessageConverter);
     }
 
+    @BeforeClass
+    public static void beforeClass() throws Exception {
+        redisServer = new RedisServer(26379);
+        redisServer.start();
+    }
+
+    @AfterClass
+    public static void afterClass() {
+        redisServer.stop();
+    }
+
     @Before
     public void setup() throws Exception {
         log.info("Executing setup");
@@ -70,6 +83,12 @@ public abstract class AbstractWebTest {
             this.mockMvc = webAppContextSetup(webApplicationContext)
                     .apply(springSecurity()).build();
         }
+    }
+
+    @After
+    public void teardown() throws Exception {
+        log.info("Executing teardown");
+        log.info("Executed teardown");
     }
 
     protected <T> ResultActions doPost(String urlTemplate) throws Exception {
