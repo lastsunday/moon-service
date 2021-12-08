@@ -13,7 +13,7 @@ spring:
     jmx:
         unique-names: "${MOON_JMX_UNIQUE_NAMES:true}"
     datasource:
-        url: "${MOON_SPRING_DATASOURCE_URL:jdbc:h2:mem:unimall;MODE=MYSQL;DB_CLOSE_DELAY=-1;}"
+        url: "${MOON_SPRING_DATASOURCE_URL:jdbc:h2:mem:moon;MODE=MYSQL;DB_CLOSE_DELAY=-1;}"
         username: "${MOON_SPRING_DATASOURCE_USERNAME:}"
         password: "${MOON_SPRING_DATASOURCE_PASSWORD:}"
     liquibase:

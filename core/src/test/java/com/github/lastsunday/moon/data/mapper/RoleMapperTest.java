@@ -13,6 +13,7 @@ import com.github.lastsunday.moon.util.IdGenerator;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = MainApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@ActiveProfiles("junit")
 public class RoleMapperTest {
 
 	@Autowired
