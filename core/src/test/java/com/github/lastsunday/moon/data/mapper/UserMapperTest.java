@@ -1,20 +1,5 @@
 package com.github.lastsunday.moon.data.mapper;
 
-import static org.junit.Assert.assertTrue;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
-import java.util.Date;
-import java.util.List;
-
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit4.SpringRunner;
-
-import com.github.pagehelper.PageHelper;
-import com.github.lastsunday.moon.MainApplication;
 import com.github.lastsunday.moon.data.domain.RoleDO;
 import com.github.lastsunday.moon.data.domain.RolePermissionDO;
 import com.github.lastsunday.moon.data.domain.UserDO;
@@ -23,10 +8,34 @@ import com.github.lastsunday.moon.data.domain.dto.UserDTO;
 import com.github.lastsunday.moon.data.mapper.user.SelectUserDetailParam;
 import com.github.lastsunday.moon.util.IdGenerator;
 import com.github.lastsunday.moon.util.SecurityUtils;
+import com.github.pagehelper.PageHelper;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootContextLoader;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.web.WebAppConfiguration;
+
+import java.util.Date;
+import java.util.List;
+
+import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = MainApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("junit")
+@ContextConfiguration(classes = UserMapperTest.class, loader = SpringBootContextLoader.class)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
+@Configuration
+@ComponentScan({"com.github.lastsunday.moon"})
+@WebAppConfiguration
+@SpringBootTest()
 public class UserMapperTest {
 
 	@Autowired
