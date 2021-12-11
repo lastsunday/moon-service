@@ -1,15 +1,11 @@
 package com.github.lastsunday.moon.config.log;
 
-import java.lang.reflect.Method;
-import java.lang.reflect.Parameter;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.TimerTask;
-
-import javax.servlet.http.HttpServletRequest;
-
+import com.alibaba.fastjson.JSON;
+import com.github.lastsunday.moon.security.LoginUser;
+import com.github.lastsunday.moon.security.TokenService;
+import com.github.lastsunday.service.core.CommonException;
+import com.github.lastsunday.service.core.manager.AsyncManager;
+import io.swagger.v3.oas.annotations.Operation;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.Signature;
@@ -32,13 +28,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
-import com.alibaba.fastjson.JSON;
-import com.github.lastsunday.moon.security.LoginUser;
-import com.github.lastsunday.moon.security.TokenService;
-import com.github.lastsunday.service.core.CommonException;
-import com.github.lastsunday.service.core.manager.AsyncManager;
-
-import io.swagger.annotations.ApiOperation;
+import javax.servlet.http.HttpServletRequest;
+import java.lang.reflect.Method;
+import java.lang.reflect.Parameter;
+import java.util.*;
 
 /**
  * 统一日志处理切面
@@ -70,9 +63,9 @@ public class WebLogAspect {
 		Signature signature = joinPoint.getSignature();
 		MethodSignature methodSignature = (MethodSignature) signature;
 		Method method = methodSignature.getMethod();
-		if (method.isAnnotationPresent(ApiOperation.class)) {
-			ApiOperation log = method.getAnnotation(ApiOperation.class);
-			webLog.setDescription(log.value());
+		if (method.isAnnotationPresent(Operation.class)) {
+			Operation log = method.getAnnotation(Operation.class);
+			webLog.setDescription(log.description());
 		}
 		String urlStr = request.getRequestURL().toString();
 		webLog.setBasePath(urlStr);

@@ -1,13 +1,17 @@
 package com.github.lastsunday.service.core.controller;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirements;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 import java.util.Date;
 
-import io.swagger.annotations.Api;
 
-@Api(tags = "common", description = "common")
+@Tag(name = "common")
 public interface CommonController {
 
-	String version();
+    @SecurityRequirements
+    String version();
 
-	Date datetime();
+    @SecurityRequirements
+    Date datetime();
 }

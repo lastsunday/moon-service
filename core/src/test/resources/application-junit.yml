@@ -52,6 +52,11 @@ logging:
             max-history: "${MOON_LOGGING_LOGBACK_ROLLINGPOLICY_MAX_HISTORY:60}"
             #日志备份文件总容量限制，0B为不限制
             total-size-cap: "${MOON_LOGGING_LOGBACK_ROLLINGPOLICY_TOTAL_SIZE_CAP:0B}"
+springdoc:
+    api-docs:
+        enabled: "${MOON_APP_SWAGGER_ENABLE:false}"
+    swagger-ui:
+        enabled: "${MOON_APP_SWAGGER_ENABLE:false}"
 app:
     #是否开启swagger
     swagger:

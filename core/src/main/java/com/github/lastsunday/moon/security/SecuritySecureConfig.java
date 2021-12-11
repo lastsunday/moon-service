@@ -56,11 +56,11 @@ public class SecuritySecureConfig extends WebSecurityConfigurerAdapter {
 		http.exceptionHandling().authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED));
 		if (appConfig.getSwagger().isEnable()) {
 			log.info("Permit swagger resource path");
-			http.authorizeRequests().antMatchers("/swagger-ui/**").permitAll()
+			http.authorizeRequests().antMatchers("/swagger-ui.html").permitAll()
 					//
-					.and().authorizeRequests().antMatchers("/v3/api-docs/**").permitAll()
+					.and().authorizeRequests().antMatchers("/swagger-ui/**").permitAll()
 					//
-					.and().authorizeRequests().antMatchers("/swagger-resources/**").permitAll();
+					.and().authorizeRequests().antMatchers("/v3/api-docs/**").permitAll();
 		} else {
 			// skip
 		}

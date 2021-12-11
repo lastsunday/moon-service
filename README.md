@@ -7,7 +7,7 @@ MOON_APP_MODULE_CLIENT_LOGIN_CAPTCHA_CHECKING_ENABLE=false;MOON_SPRING_LIQUIBASE
 
 ## API文档
 
-[Click here to access swagger](http://localhost:9211/moon/swagger-ui/index.html)
+[Click here to access swagger](http://localhost:9211/moon/swagger-ui.html)
 
 ## ErrorCode说明
 

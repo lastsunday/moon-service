@@ -1,25 +1,24 @@
 package com.github.lastsunday.moon.controller.dto;
 
+import com.github.lastsunday.moon.dto.SortOrder;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
-import com.github.lastsunday.moon.dto.SortOrder;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
-
-@ApiModel
+@Schema
 public abstract class AbstractPageParamDTO<T> {
 
 	@NotNull
 	@Min(1)
-	@ApiModelProperty(example = "1")
+	@Schema(example = "1")
 	private Integer pageNum;
 	@Min(1)
 	@Max(1000)
 	@NotNull
-	@ApiModelProperty(example = "20")
+	@Schema(example = "20")
 	private Integer pageSize;
 	// sort field
 	private T sortField;

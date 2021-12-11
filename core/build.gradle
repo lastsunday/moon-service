@@ -34,12 +34,12 @@ dependencies {
 	implementation("io.swagger.core.v3:swagger-jaxrs2:2.1.11"){
 		exclude group: "javax.ws.rs",module:"jsr311-api"
 	}
-	implementation("io.springfox:springfox-boot-starter:3.0.0")
+	implementation("org.springdoc:springdoc-openapi-ui:1.5.13")
 	// swagger end
 	// db start
 	implementation("com.baomidou:mybatis-plus-boot-starter:3.4.3.4")
 	implementation("mysql:mysql-connector-java:8.0.27")
-	implementation("org.liquibase:liquibase-core:4.6.1"){
+	implementation("org.liquibase:liquibase-core:4.6.2"){
 		exclude module: "logback-classic"
 		exclude module: "ch.qos.logback"
 	}
@@ -54,7 +54,7 @@ dependencies {
 	implementation("eu.bitwalker:UserAgentUtils:1.21")
 	implementation("org.springframework.boot:spring-boot-starter-aop")
 	implementation("com.devskiller.friendly-id:friendly-id:1.1.0")
-	implementation("com.github.oshi:oshi-core:5.8.3")
+	implementation("com.github.oshi:oshi-core:5.8.5")
 	implementation("com.github.ua-parser:uap-java:1.5.2")
 	// util end
 	// dev start

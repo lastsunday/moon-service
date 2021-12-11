@@ -1,17 +1,18 @@
 package com.github.lastsunday.moon.controller;
 
-import java.io.IOException;
-
 import com.github.lastsunday.moon.controller.dto.CaptchaResultDTO;
 import com.github.lastsunday.service.core.controller.DefaultExceptionConstant;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirements;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+import java.io.IOException;
 
-@Api(tags = "captcha", description = "captcha")
+@Tag(name = "captcha")
 public interface CaptchaController extends AbstractController, DefaultExceptionConstant {
 
-	@ApiResponses(value = { @ApiResponse(code = 400, message = DEFAULT_COMMON_EXCEPTION_MESSAGE) })
-	CaptchaResultDTO getCode() throws IOException;
+    @ApiResponses(value = {@ApiResponse(responseCode = "400", description = DEFAULT_COMMON_EXCEPTION_MESSAGE)})
+    @SecurityRequirements
+    CaptchaResultDTO getCode() throws IOException;
 }

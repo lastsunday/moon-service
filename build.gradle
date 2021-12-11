@@ -9,7 +9,7 @@ buildscript {
         mavenCentral()
     }
     ext {
-        springBootVersion = '2.5.7'
+        springBootVersion = '2.6.1'
     }
     dependencies {
         classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
@@ -31,7 +31,7 @@ subprojects {
 
     dependencyManagement {
         imports {
-            mavenBom "org.springframework.cloud:spring-cloud-dependencies:2020.0.4"
+            mavenBom "org.springframework.cloud:spring-cloud-dependencies:2021.0.0"
         }
     }
 }

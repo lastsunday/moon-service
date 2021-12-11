@@ -5,79 +5,60 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.function.Predicate;
 
+import io.swagger.v3.oas.models.*;
+import io.swagger.v3.oas.models.info.Info;
+import io.swagger.v3.oas.models.info.License;
+import io.swagger.v3.oas.models.security.SecurityRequirement;
+import io.swagger.v3.oas.models.security.SecurityScheme;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springdoc.core.GroupedOpenApi;
+import org.springdoc.core.SpringDocConfiguration;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import com.github.lastsunday.service.core.util.CommonUtil;
 
-import springfox.documentation.builders.PathSelectors;
-import springfox.documentation.builders.RequestHandlerSelectors;
-import springfox.documentation.service.ApiInfo;
-import springfox.documentation.service.ApiKey;
-import springfox.documentation.service.AuthorizationScope;
-import springfox.documentation.service.Contact;
-import springfox.documentation.service.SecurityReference;
-import springfox.documentation.service.VendorExtension;
-import springfox.documentation.spi.DocumentationType;
-import springfox.documentation.spi.service.contexts.OperationContext;
-import springfox.documentation.spi.service.contexts.SecurityContext;
-import springfox.documentation.spring.web.plugins.Docket;
 
 @Configuration
 public class SwaggerConfig {
 
-	protected Logger log = LoggerFactory.getLogger(SwaggerConfig.class);
+    protected Logger log = LoggerFactory.getLogger(SwaggerConfig.class);
 
-	@Autowired
-	protected AppConfig appConfig;
-	@Autowired
-	protected CommonUtil commonUtil;
+    @Autowired
+    protected AppConfig appConfig;
+    @Autowired
+    protected CommonUtil commonUtil;
 
-	// see
-	// https://springfox.github.io/springfox/docs/current/#springfox-spring-mvc-and-spring-boot
-	@Bean
-	public Docket petApi() {
-		log.info("Swagger enable = " + appConfig.getSwagger().isEnable());
-		return new Docket(DocumentationType.OAS_30).enable(appConfig.getSwagger().isEnable()).apiInfo(apiInfo())
-				.select().apis(RequestHandlerSelectors.any()).paths(new Predicate<String>() {
+    // see
+    // https://springfox.github.io/springfox/docs/current/#springfox-spring-mvc-and-spring-boot
+    @Bean
+    public GroupedOpenApi publicApi() {
+        log.info("Swagger enable = " + appConfig.getSwagger().isEnable());
+        return GroupedOpenApi.builder()
+                .group("public")
+                .pathsToMatch("/**")
+                .build();
+    }
 
-					@Override
-					public boolean test(String t) {
-						return !t.matches("/error.*");
-					}
-				}).paths(PathSelectors.any()).build().pathMapping("/").securitySchemes(Arrays.asList(apiKey()))
-				.securityContexts(Arrays.asList(securityContext())).enableUrlTemplating(true);
-	}
+    @Bean
+    public OpenAPI springShopOpenAPI() {
+        return new OpenAPI()
+                .info(new Info().title(commonUtil.getCurrentAppTitle())
+                        .description(commonUtil.getCurrentAppTitle())
+                        .version(commonUtil.getCurrentAppVersion())
+                        .license(new License().name("Mulan Permissive Software License，Version 2").url("http://license.coscl.org.cn/MulanPSL2")))
+                .externalDocs(new ExternalDocumentation()
+                        .description("")
+                        .url(""))
+                .components(new Components().addSecuritySchemes("basicSchema", new SecurityScheme().name(appConfig.getService().getToken().getHeader()).type(SecurityScheme.Type.APIKEY).scheme("bearer").bearerFormat("JWT").in(SecurityScheme.In.HEADER)))
+                .security(Arrays.asList(basicSecurityRequirement()));
+    }
 
-	@SuppressWarnings("rawtypes")
-	private ApiInfo apiInfo() {
-		return new ApiInfo(commonUtil.getCurrentAppTitle(), commonUtil.getCurrentAppTitle(),
-				commonUtil.getCurrentAppVersion(), "", new Contact("", "", ""), "", "",
-				new ArrayList<VendorExtension>());
-	}
+    private SecurityRequirement basicSecurityRequirement() {
+        return new SecurityRequirement().addList("basicSchema");
+    }
 
-	private ApiKey apiKey() {
-		return new ApiKey("Authorization", "Authorization", "header");
-	}
-
-	private SecurityContext securityContext() {
-		return SecurityContext.builder().securityReferences(defaultAuth())
-				.operationSelector(new Predicate<OperationContext>() {
-
-					@Override
-					public boolean test(OperationContext t) {
-						return t.requestMappingPattern().matches("^/api/(?!client/login)(?!common/).*$");
-					}
-				}).build();
-	}
-
-	List<SecurityReference> defaultAuth() {
-		AuthorizationScope authorizationScope = new AuthorizationScope("global", "accessEverything");
-		AuthorizationScope[] authorizationScopes = new AuthorizationScope[1];
-		authorizationScopes[0] = authorizationScope;
-		return Arrays.asList(new SecurityReference("Authorization", authorizationScopes));
-	}
 }
