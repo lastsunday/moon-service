@@ -9,6 +9,7 @@ public class RoleDTO extends DefaultDTO {
 	/** 0.冻结 1.激活 */
 	private Integer status;
 	private String remark;
+	private Boolean canModify;
 	private Set<String> permissions;
 
 	public String getName() {
@@ -41,6 +42,14 @@ public class RoleDTO extends DefaultDTO {
 
 	public void setRemark(String remark) {
 		this.remark = remark;
+	}
+
+	public Boolean getCanModify() {
+		return canModify;
+	}
+
+	public void setCanModify(Boolean canModify) {
+		this.canModify = canModify;
 	}
 
 	public Set<String> getPermissions() {

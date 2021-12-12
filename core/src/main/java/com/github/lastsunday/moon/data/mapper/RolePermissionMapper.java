@@ -15,6 +15,13 @@ public interface RolePermissionMapper extends BaseMapper<RolePermissionDO> {
 		return selectList(queryWrapper);
 	}
 
+	default Long selectCountRolePermissionByRoleId(String roleId) {
+		RolePermissionDO rolePermissionDo = new RolePermissionDO();
+		rolePermissionDo.setRoleId(roleId);
+		QueryWrapper<RolePermissionDO> queryWrapper = new QueryWrapper<RolePermissionDO>(rolePermissionDo);
+		return selectCount(queryWrapper);
+	}
+
 	default int deleteRolePermissionByRoleId(String roleId) {
 		RolePermissionDO rolePermissionDo = new RolePermissionDO();
 		rolePermissionDo.setRoleId(roleId);

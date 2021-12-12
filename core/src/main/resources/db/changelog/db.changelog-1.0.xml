@@ -2,7 +2,7 @@
 <databaseChangeLog
 	xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.9.xsd">
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.6.xsd">
 
 	<changeSet author="lastsunday" id="1_0-1">
 		<createTable remarks="用户表" tableName="user">
@@ -39,6 +39,10 @@
 			<column name="desc" type="VARCHAR(1023)" />
 			<column defaultValueNumeric="1" name="status" remarks="0启用1禁用"
 				type="INT">
+				<constraints nullable="false" />
+			</column>
+			<column defaultValueBoolean="true" name="can_modify" remarks="角色是否可进行修改"
+					type="BOOLEAN">
 				<constraints nullable="false" />
 			</column>
 			<column name="create_by" remarks="创建者" type="VARCHAR(30)" />
@@ -90,9 +94,10 @@
 	<changeSet author="lastsunday" id="1_0-2">
 		<insert tableName="role">
 			<column name="id" value="ACLYdWuNqIQOMkr9CgJxD" />
-			<column name="name" value="SuperAdmin" />
-			<column name="desc" value="SuperAdmin" />
+			<column name="name" value="root" />
+			<column name="desc" value="Root" />
 			<column name="status" valueNumeric="0" />
+			<column name="can_modify" valueBoolean="false" />
 		</insert>
 		<insert tableName="role_permission">
 			<column name="id" value="VaPuTh32bRWyasGLhQM4x" />

@@ -12,6 +12,8 @@ public class RoleDO extends DefaultDO<RoleDTO> {
 	private String desc;
 	/** 0.冻结 1.激活 */
 	private Integer status;
+	@TableField("can_modify")
+	private Boolean canModify;
 	private String remark;
 
 	public String getName() {
@@ -38,6 +40,14 @@ public class RoleDO extends DefaultDO<RoleDTO> {
 		this.status = status;
 	}
 
+	public Boolean getCanModify() {
+		return canModify;
+	}
+
+	public void setCanModify(Boolean canModify) {
+		this.canModify = canModify;
+	}
+
 	public String getRemark() {
 		return remark;
 	}
@@ -53,6 +63,7 @@ public class RoleDO extends DefaultDO<RoleDTO> {
 		result.setName(getName());
 		result.setDesc(getDesc());
 		result.setStatus(getStatus());
+		result.setCanModify(getCanModify());
 		result.setRemark(getRemark());
 		return result;
 	}

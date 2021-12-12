@@ -39,7 +39,7 @@ dependencies {
 	// db start
 	implementation("com.baomidou:mybatis-plus-boot-starter:3.4.3.4")
 	implementation("mysql:mysql-connector-java:8.0.27")
-	implementation("org.liquibase:liquibase-core:4.6.2"){
+	implementation("org.liquibase:liquibase-core:4.6.1"){
 		exclude module: "logback-classic"
 		exclude module: "ch.qos.logback"
 	}
