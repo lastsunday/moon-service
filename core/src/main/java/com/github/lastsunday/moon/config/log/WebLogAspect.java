@@ -40,66 +40,60 @@ import java.util.*;
 @Component
 @Order(1)
 public class WebLogAspect {
-	private static final Logger log = LoggerFactory.getLogger(WebLogAspect.class);
-	@Autowired
-	private TokenService tokenService;
+    private static final Logger log = LoggerFactory.getLogger(WebLogAspect.class);
+    @Autowired
+    private TokenService tokenService;
 
-	@Pointcut("execution(public * com.github.lastsunday.moon.controller.*Impl.*(..)) || execution(public * com.github.lastsunday.service.core.controller.*Impl.*(..))")
-	public void webLog() {
-	}
+    @Pointcut("execution(public * com.github.lastsunday.moon.controller.*Impl.*(..)) || execution(public * com.github.lastsunday.service.core.controller.*Impl.*(..))")
+    public void webLog() {
+    }
 
-	@Before("webLog()")
-	public void doBefore(JoinPoint joinPoint) throws Throwable {
-	}
+    @Before("webLog()")
+    public void doBefore(JoinPoint joinPoint) throws Throwable {
+    }
 
-	@Around("webLog()")
-	public Object doAround(ProceedingJoinPoint joinPoint) throws Throwable {
-		long startTime = System.currentTimeMillis();
-		// 获取当前请求对象
-		ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
-		HttpServletRequest request = attributes.getRequest();
-		// 记录请求信息(通过Logstash传入Elasticsearch)
-		final WebLog webLog = new WebLog();
-		Signature signature = joinPoint.getSignature();
-		MethodSignature methodSignature = (MethodSignature) signature;
-		Method method = methodSignature.getMethod();
-		if (method.isAnnotationPresent(Operation.class)) {
-			Operation log = method.getAnnotation(Operation.class);
-			webLog.setDescription(log.description());
-		}
-		String urlStr = request.getRequestURL().toString();
-		webLog.setBasePath(urlStr);
-		webLog.setIp(IpUtils.getIpAddr(request));
-		webLog.setMethod(request.getMethod());
-		webLog.setParameter(getParameter(method, joinPoint.getArgs()));
-		webLog.setStartTime(startTime);
-		webLog.setUri(request.getRequestURI());
-		webLog.setUrl(request.getRequestURL().toString());
-		webLog.setThreadId(Thread.currentThread().getId());
-		LoginUser loginUser = tokenService.getLoginUser(request);
-		if (loginUser != null) {
-			webLog.setUserId(loginUser.getId());
-			webLog.setUserAccount(loginUser.getAccount());
-		} else {
-			// skip
-		}
-		final WebLog target = new WebLog();
-		BeanUtils.copyProperties(webLog, target);
-		AsyncManager.me().execute(new TimerTask() {
-
-			@Override
-			public void run() {
-				log.info("request {}", JSON.toJSONString(target));
-			}
-		});
-		try {
-			Object result = joinPoint.proceed();
-			if (isNotSetResult(result)) {
-				// skip
-			} else {
-				webLog.setResult(result);
-			}
-			webLog.setError(false);
+    @Around("webLog()")
+    public Object doAround(ProceedingJoinPoint joinPoint) throws Throwable {
+        long startTime = System.currentTimeMillis();
+        // 获取当前请求对象
+        ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        HttpServletRequest request = attributes.getRequest();
+        // 记录请求信息(通过Logstash传入Elasticsearch)
+        final WebLog webLog = new WebLog();
+        Signature signature = joinPoint.getSignature();
+        MethodSignature methodSignature = (MethodSignature) signature;
+        Method method = methodSignature.getMethod();
+        if (method.isAnnotationPresent(Operation.class)) {
+            Operation log = method.getAnnotation(Operation.class);
+            webLog.setDescription(log.description());
+        }
+        String urlStr = request.getRequestURL().toString();
+        webLog.setBasePath(urlStr);
+        webLog.setIp(IpUtils.getIpAddr(request));
+        webLog.setMethod(request.getMethod());
+        webLog.setParameter(getParameter(method, joinPoint.getArgs()));
+        webLog.setStartTime(startTime);
+        webLog.setUri(request.getRequestURI());
+        webLog.setUrl(request.getRequestURL().toString());
+        webLog.setThreadId(Thread.currentThread().getId());
+        LoginUser loginUser = tokenService.getLoginUser(request);
+        if (loginUser != null) {
+            webLog.setUserId(loginUser.getId());
+            webLog.setUserAccount(loginUser.getAccount());
+        } else {
+            // skip
+        }
+        final WebLog target = new WebLog();
+        BeanUtils.copyProperties(webLog, target);
+        log.info("request {}", JSON.toJSONString(target));
+        try {
+            Object result = joinPoint.proceed();
+            if (isNotSetResult(result)) {
+                // skip
+            } else {
+                webLog.setResult(result);
+            }
+            webLog.setError(false);
 //			Map<String, Object> logMap = new HashMap<>();
 //			logMap.put("url", webLog.getUrl());
 //			logMap.put("method", webLog.getMethod());
@@ -108,100 +102,94 @@ public class WebLogAspect {
 //			logMap.put("description", webLog.getDescription());
 //			log.info("{}", JSON.toJSONString(webLog));
 //          log.info(Markers.appendEntries(logMap), JSONUtil.parse(webLog).toString());
-			return result;
-		} catch (Exception e) {
-			ExceptionLog exceptionLog = new ExceptionLog();
-			exceptionLog.setErrorDetail(substring(e.getMessage(), 1000));
-			if (exceptionLog.getErrorDetail() == null || exceptionLog.getErrorDetail().isEmpty()) {
-				exceptionLog.setErrorDetail("exception class = " + e.getClass().getName());
-			} else {
-				// skip
-			}
-			if (e instanceof CommonException) {
-				CommonException controllerException = (CommonException) e;
-				exceptionLog.setErrorCode(controllerException.getErrorCode());
-				exceptionLog.setErrorMessage(controllerException.getErrorMessage());
-			} else {
-				// skip
-			}
-			webLog.setResult(exceptionLog);
-			webLog.setError(true);
-			throw e;
-		} finally {
-			long endTime = System.currentTimeMillis();
-			webLog.setEndTime(endTime);
-			webLog.setSpendTime(endTime - startTime);
-			AsyncManager.me().execute(new TimerTask() {
+            return result;
+        } catch (Exception e) {
+            ExceptionLog exceptionLog = new ExceptionLog();
+            exceptionLog.setErrorDetail(substring(e.getMessage(), 1000));
+            if (exceptionLog.getErrorDetail() == null || exceptionLog.getErrorDetail().isEmpty()) {
+                exceptionLog.setErrorDetail("exception class = " + e.getClass().getName());
+            } else {
+                // skip
+            }
+            if (e instanceof CommonException) {
+                CommonException controllerException = (CommonException) e;
+                exceptionLog.setErrorCode(controllerException.getErrorCode());
+                exceptionLog.setErrorMessage(controllerException.getErrorMessage());
+            } else {
+                // skip
+            }
+            webLog.setResult(exceptionLog);
+            webLog.setError(true);
+            throw e;
+        } finally {
+            long endTime = System.currentTimeMillis();
+            webLog.setEndTime(endTime);
+            webLog.setSpendTime(endTime - startTime);
+            log.debug("response {}", JSON.toJSONString(webLog));
+        }
+    }
 
-				@Override
-				public void run() {
-					log.debug("response {}", JSON.toJSONString(webLog));
-				}
-			});
-		}
-	}
+    @SuppressWarnings("rawtypes")
+    private boolean isNotSetResult(Object object) {
+        if (object instanceof ResponseEntity) {
+            if (((ResponseEntity) object).getBody() instanceof InputStreamResource) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
 
-	@SuppressWarnings("rawtypes")
-	private boolean isNotSetResult(Object object) {
-		if (object instanceof ResponseEntity) {
-			if (((ResponseEntity) object).getBody() instanceof InputStreamResource) {
-				return true;
-			} else {
-				return false;
-			}
-		} else {
-			return false;
-		}
-	}
+    private static final String NULLSTR = "";
 
-	private static final String NULLSTR = "";
+    public static String substring(final String str, int start) {
+        if (str == null) {
+            return NULLSTR;
+        }
+        if (start < 0) {
+            start = str.length() + start;
+        }
+        if (start < 0) {
+            start = 0;
+        }
+        if (start > str.length()) {
+            return NULLSTR;
+        }
+        return str.substring(start);
+    }
 
-	public static String substring(final String str, int start) {
-		if (str == null) {
-			return NULLSTR;
-		}
-		if (start < 0) {
-			start = str.length() + start;
-		}
-		if (start < 0) {
-			start = 0;
-		}
-		if (start > str.length()) {
-			return NULLSTR;
-		}
-		return str.substring(start);
-	}
-
-	/**
-	 * 根据方法和传入的参数获取请求参数
-	 */
-	private Object getParameter(Method method, Object[] args) {
-		List<Object> argList = new ArrayList<>();
-		Parameter[] parameters = method.getParameters();
-		for (int i = 0; i < parameters.length; i++) {
-			// 将RequestBody注解修饰的参数作为请求参数
-			RequestBody requestBody = parameters[i].getAnnotation(RequestBody.class);
-			if (requestBody != null) {
-				argList.add(args[i]);
-			}
-			// 将RequestParam注解修饰的参数作为请求参数
-			RequestParam requestParam = parameters[i].getAnnotation(RequestParam.class);
-			if (requestParam != null) {
-				Map<String, Object> map = new HashMap<>();
-				String key = parameters[i].getName();
-				if (StringUtils.hasText(requestParam.value())) {
-					key = requestParam.value();
-				}
-				map.put(key, args[i]);
-				argList.add(map);
-			}
-		}
-		if (argList.size() == 0) {
-			return null;
-		} else if (argList.size() == 1) {
-			return argList.get(0);
-		} else {
-			return argList;
-		}
-	}
+    /**
+     * 根据方法和传入的参数获取请求参数
+     */
+    private Object getParameter(Method method, Object[] args) {
+        List<Object> argList = new ArrayList<>();
+        Parameter[] parameters = method.getParameters();
+        for (int i = 0; i < parameters.length; i++) {
+            // 将RequestBody注解修饰的参数作为请求参数
+            RequestBody requestBody = parameters[i].getAnnotation(RequestBody.class);
+            if (requestBody != null) {
+                argList.add(args[i]);
+            }
+            // 将RequestParam注解修饰的参数作为请求参数
+            RequestParam requestParam = parameters[i].getAnnotation(RequestParam.class);
+            if (requestParam != null) {
+                Map<String, Object> map = new HashMap<>();
+                String key = parameters[i].getName();
+                if (StringUtils.hasText(requestParam.value())) {
+                    key = requestParam.value();
+                }
+                map.put(key, args[i]);
+                argList.add(map);
+            }
+        }
+        if (argList.size() == 0) {
+            return null;
+        } else if (argList.size() == 1) {
+            return argList.get(0);
+        } else {
+            return argList;
+        }
+    }
 }

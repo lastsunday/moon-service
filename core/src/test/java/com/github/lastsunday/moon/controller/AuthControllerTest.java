@@ -1,10 +1,11 @@
 package com.github.lastsunday.moon.controller;
 
-import com.github.lastsunday.moon.controller.dto.ClientInfoResultDTO;
-import com.github.lastsunday.moon.controller.dto.ClientLoginParamDTO;
-import com.github.lastsunday.moon.controller.dto.ClientResetPasswordParamDTO;
+import com.github.lastsunday.moon.controller.dto.*;
+import com.github.lastsunday.moon.util.UUID;
 import org.junit.Assert;
 import org.junit.Test;
+
+import java.util.Arrays;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -27,9 +28,20 @@ public class AuthControllerTest extends AbstractControllerTest {
     @Test
     public void testResetPassword() throws Exception {
         loginAsAdmin();
-        String account = "admin";
-        String oldPassword = "admin123";
-        String newPassword = "admin1234";
+        //create user test
+        UserCreateParamDTO userCreateParam = new UserCreateParamDTO();
+        String testAccount = "test" + UUID.shortUUID();
+        String oldPassword = testAccount + "123";
+        userCreateParam.setName(testAccount);
+        userCreateParam.setAccount(testAccount);
+        userCreateParam.setPassword(oldPassword);
+        userCreateParam.setRoleIds(Arrays.asList("ACLYdWuNqIQOMkr9CgJxD"));
+        UserCreateResultDTO createUserResponse = readResponse(doPost("/api/system/user/create", userCreateParam).andExpect(status().isOk()), UserCreateResultDTO.class);
+        //logout
+        doPost("/api/client/logout").andExpect(status().isOk());
+        //login as test account
+        login(testAccount, oldPassword);
+        String newPassword = testAccount + "1234";
         //reset password error
         ClientResetPasswordParamDTO param = new ClientResetPasswordParamDTO();
         param.setCurrentPassword(newPassword);
@@ -43,12 +55,12 @@ public class AuthControllerTest extends AbstractControllerTest {
         doPost("/api/client/logout").andExpect(status().isOk());
         //login with old password
         ClientLoginParamDTO clientLoginParamDTO = new ClientLoginParamDTO();
-        clientLoginParamDTO.setAccount(account);
+        clientLoginParamDTO.setAccount(testAccount);
         clientLoginParamDTO.setPassword(oldPassword);
         doPost("/api/client/login", clientLoginParamDTO).andExpect(status().isBadRequest());
-        login(account, newPassword);
+        login(testAccount, newPassword);
         ClientInfoResultDTO clientInfoResultDTO = readResponse(doPost("/api/client/info").andExpect(status().isOk()), ClientInfoResultDTO.class);
-        Assert.assertEquals(account, clientInfoResultDTO.getName());
+        Assert.assertEquals(testAccount, clientInfoResultDTO.getName());
     }
 
 }
