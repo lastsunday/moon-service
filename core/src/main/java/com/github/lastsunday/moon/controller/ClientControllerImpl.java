@@ -7,6 +7,9 @@ import java.util.Set;
 import javax.annotation.Resource;
 import javax.validation.Valid;
 
+import com.github.lastsunday.moon.config.log.OperationLog;
+import com.github.lastsunday.moon.config.log.emun.FunctionModule;
+import com.github.lastsunday.moon.config.log.emun.Operation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,6 +70,7 @@ public class ClientControllerImpl implements ClientController {
 
 	@Override
 	@RequestMapping(path = "login", method = RequestMethod.POST)
+	@OperationLog(functionModule = FunctionModule.CLIENT,operation = Operation.LOGIN)
 	public ClientLoginResultDTO login(@Valid @RequestBody ClientLoginParamDTO param) {
 		if (appConfig.getModule().getClient().isLoginCaptchaCheckingEnable()) {
 			// 验证码校验

@@ -9,7 +9,9 @@ public enum FunctionModule {
 	//
 	USER(1),
 	//
-	ROLE(2);
+	ROLE(2),
+	//
+	CLIENT(3);
 
 	private int code;
 

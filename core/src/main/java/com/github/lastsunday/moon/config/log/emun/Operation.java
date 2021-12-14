@@ -9,7 +9,9 @@ public enum Operation {
 	//
 	DELETE(2),
 	//
-	UPDATE(3);
+	UPDATE(3),
+	//
+	LOGIN(4);
 
 	private int code;
 
