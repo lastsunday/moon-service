@@ -7,6 +7,7 @@ import java.nio.file.Files;
 import java.nio.file.LinkOption;
 import java.nio.file.attribute.FileTime;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -18,48 +19,54 @@ import com.github.lastsunday.moon.service.log.FileLog;
 @Service
 public class LogServiceImpl implements LogService {
 
-	@Value("${logging.file.name}")
-	private String logFileName;
+    @Value("${logging.file.name}")
+    private String logFileName;
 
-	@Override
-	public List<FileLog> list() {
-		List<FileLog> result = new ArrayList<FileLog>();
-		File logDir = new File(new File(logFileName).getParent());
-		File[] files = logDir.listFiles();
-		for (int i = 0; i < files.length; i++) {
-			File file = files[i];
-			FileLog fileLog = new FileLog();
-			fileLog.setId(file.getAbsolutePath().replace(logDir.getAbsolutePath(), ""));
-			fileLog.setName(file.getName());
-			fileLog.setPath(file.getAbsolutePath());
-			fileLog.setLength(file.length());
-			fileLog.setDirectory(file.isDirectory());
-			fileLog.setModifyDate(new Date(file.lastModified()));
-			try {
-				fileLog.setCreateDate(new Date(
-						((FileTime) Files.getAttribute(FileSystems.getDefault().getPath(file.getAbsolutePath()),
-								"creationTime", LinkOption.NOFOLLOW_LINKS)).toMillis()));
-			} catch (IOException e) {
-				throw new RuntimeException(e);
-			}
-			result.add(fileLog);
-		}
-		return result;
-	}
+    @Override
+    public List<FileLog> list() {
+        List<FileLog> result = new ArrayList<FileLog>();
+        File logDir = new File(new File(logFileName).getParent());
+        File[] files = logDir.listFiles();
+        for (int i = 0; i < files.length; i++) {
+            File file = files[i];
+            FileLog fileLog = new FileLog();
+            fileLog.setId(file.getAbsolutePath().replace(logDir.getAbsolutePath(), ""));
+            fileLog.setName(file.getName());
+            fileLog.setPath(file.getAbsolutePath());
+            fileLog.setLength(file.length());
+            fileLog.setDirectory(file.isDirectory());
+            fileLog.setModifyDate(new Date(file.lastModified()));
+            try {
+                fileLog.setCreateDate(new Date(
+                        ((FileTime) Files.getAttribute(FileSystems.getDefault().getPath(file.getAbsolutePath()),
+                                "creationTime", LinkOption.NOFOLLOW_LINKS)).toMillis()));
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            result.add(fileLog);
+        }
+        result.sort(new Comparator<FileLog>() {
+            @Override
+            public int compare(FileLog o1, FileLog o2) {
+                return (int) (o2.getModifyDate().getTime() - o1.getModifyDate().getTime());
+            }
+        });
+        return result;
+    }
 
-	@Override
-	public String getLogFileAbsolutePathById(String id) {
-		File logDir = new File(new File(logFileName).getParent());
-		File targetFile = new File(logDir.getAbsolutePath() + id);
-		if (targetFile.getAbsolutePath().startsWith(logDir.getAbsolutePath())) {
-			if (targetFile.exists()) {
-				return targetFile.getAbsolutePath();
-			} else {
-				throw new LogFileNotExistsException();
-			}
-		} else {
-			throw new InvalidLogIdException();
-		}
-	}
+    @Override
+    public String getLogFileAbsolutePathById(String id) {
+        File logDir = new File(new File(logFileName).getParent());
+        File targetFile = new File(logDir.getAbsolutePath() + id);
+        if (targetFile.getAbsolutePath().startsWith(logDir.getAbsolutePath())) {
+            if (targetFile.exists()) {
+                return targetFile.getAbsolutePath();
+            } else {
+                throw new LogFileNotExistsException();
+            }
+        } else {
+            throw new InvalidLogIdException();
+        }
+    }
 
 }
