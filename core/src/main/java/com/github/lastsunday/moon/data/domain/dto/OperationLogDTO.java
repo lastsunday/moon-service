@@ -1,34 +1,21 @@
-package com.github.lastsunday.moon.data.domain;
+package com.github.lastsunday.moon.data.domain.dto;
+
+import com.baomidou.mybatisplus.annotation.TableField;
 
 import java.util.Date;
 
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
-import com.github.lastsunday.moon.data.ToData;
-import com.github.lastsunday.moon.data.domain.dto.OperationLogDTO;
-
-@TableName("operation_log")
-public class OperationLogDO implements ToData<OperationLogDTO> {
-
-    @TableId
+public class OperationLogDTO {
     private String id;
-    @TableField("operator_id")
     private String operatorId;
-    @TableField("create_time")
     private Date createTime;
-    @TableField("function_module")
     private Integer functionModule;
     private Integer operation;
-    @TableField("operator_account")
     private String operatorAccount;
     private String path;
     private String ip;
     private String request;
     private String response;
-    @TableField("error_code")
     private Integer errorCode;
-    @TableField("error_message")
     private String errorMessage;
 
     public String getId() {
@@ -125,23 +112,5 @@ public class OperationLogDO implements ToData<OperationLogDTO> {
 
     public void setErrorMessage(String errorMessage) {
         this.errorMessage = errorMessage;
-    }
-
-    @Override
-    public OperationLogDTO toData() {
-        OperationLogDTO result = new OperationLogDTO();
-        result.setId(getId());
-        result.setOperatorId(getOperatorId());
-        result.setCreateTime(getCreateTime());
-        result.setFunctionModule(getFunctionModule());
-        result.setOperation(getOperation());
-        result.setOperatorAccount(getOperatorAccount());
-        result.setPath(getPath());
-        result.setIp(getIp());
-        result.setRequest(getRequest());
-        result.setResponse(getResponse());
-        result.setErrorCode(getErrorCode());
-        result.setErrorMessage(getErrorMessage());
-        return result;
     }
 }
