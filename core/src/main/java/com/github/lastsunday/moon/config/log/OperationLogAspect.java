@@ -20,6 +20,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -108,7 +109,7 @@ public class OperationLogAspect {
                 operationLogData.setRequest(paramsMap.toString());
             }
             if (e == null) {
-                if (jsonResult == null) {
+                if (jsonResult == null || jsonResult instanceof ResponseEntity) {
                     operationLogData.setResponse(null);
                 } else {
                     operationLogData.setResponse(JSON.toJSONString(jsonResult));
