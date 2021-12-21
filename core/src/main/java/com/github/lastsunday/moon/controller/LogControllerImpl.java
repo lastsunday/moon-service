@@ -36,9 +36,9 @@ import java.util.List;
 public class LogControllerImpl implements LogController {
 
     @Autowired
-    protected LogService logService;
+    private LogService logService;
     @Autowired
-    protected OperationLogMapper operationLogMapper;
+    private OperationLogMapper operationLogMapper;
 
     @Override
     @RequestMapping(path = "list", method = RequestMethod.POST)

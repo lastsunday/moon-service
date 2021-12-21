@@ -1,12 +1,8 @@
 package com.github.lastsunday.moon.config;
 
+import com.github.lastsunday.moon.config.app.*;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
-
-import com.github.lastsunday.moon.config.app.Module;
-import com.github.lastsunday.moon.config.app.Remote;
-import com.github.lastsunday.moon.config.app.Service;
-import com.github.lastsunday.moon.config.app.Web;
 
 @Component
 @ConfigurationProperties(prefix = "app", ignoreUnknownFields = false)
@@ -17,6 +13,7 @@ public class AppConfig {
 	private Module module = new Module();
 	private Remote remote = new Remote();
 	private Web web = new Web();
+	private DataKey dataKey = new DataKey();
 
 	public Swagger getSwagger() {
 		return swagger;
@@ -58,4 +55,11 @@ public class AppConfig {
 		this.web = web;
 	}
 
+	public DataKey getDataKey() {
+		return dataKey;
+	}
+
+	public void setDataKey(DataKey dataKey) {
+		this.dataKey = dataKey;
+	}
 }

@@ -10,6 +10,7 @@ import com.github.lastsunday.moon.controller.dto.ClientLoginParamDTO;
 import com.github.lastsunday.moon.controller.dto.ClientLoginResultDTO;
 import com.github.lastsunday.moon.controller.dto.ClientResetPasswordParamDTO;
 import com.github.lastsunday.moon.data.component.CacheComponent;
+import com.github.lastsunday.moon.data.component.DataKeyBuilder;
 import com.github.lastsunday.moon.data.domain.RoleDO;
 import com.github.lastsunday.moon.data.domain.UserDO;
 import com.github.lastsunday.moon.data.domain.UserRoleDO;
@@ -46,25 +47,28 @@ public class ClientControllerImpl implements ClientController {
     public static final Logger log = LoggerFactory.getLogger(ClientControllerImpl.class);
 
     @Autowired
-    protected AppConfig appConfig;
+    private AppConfig appConfig;
 
     @Autowired
-    protected TokenService tokenService;
+    private TokenService tokenService;
 
     @Resource
-    protected AuthenticationManager authenticationManager;
+    private AuthenticationManager authenticationManager;
 
     @Autowired
-    protected CacheComponent redisCache;
+    private CacheComponent redisCache;
 
     @Autowired
-    protected UserRoleMapper userRoleMapper;
+    private UserRoleMapper userRoleMapper;
 
     @Autowired
-    protected RoleMapper roleMapper;
+    private RoleMapper roleMapper;
 
     @Autowired
-    protected UserMapper userMapper;
+    private UserMapper userMapper;
+
+    @Autowired
+    private DataKeyBuilder dataKeyBuilder;
 
     @Override
     @RequestMapping(path = "login", method = RequestMethod.POST)
@@ -72,7 +76,7 @@ public class ClientControllerImpl implements ClientController {
     public ClientLoginResultDTO login(@Valid @RequestBody ClientLoginParamDTO param) {
         if (appConfig.getModule().getClient().isLoginCaptchaCheckingEnable()) {
             // 验证码校验
-            String verifyKey = Constants.CAPTCHA_CODE_KEY + param.getUuid();
+            String verifyKey = dataKeyBuilder.getKeyWithPrefix(Constants.CAPTCHA_CODE_CACHE_KEY) + param.getUuid();
             String captcha = redisCache.getRaw(verifyKey);
             if (captcha == null) {
                 throw new CommonException(MESSAGE_CLIENT_VERIFY_CODE_NOT_SENT_OR_EXPIRED);
@@ -163,7 +167,7 @@ public class ClientControllerImpl implements ClientController {
     @RequestMapping(path = "logout", method = RequestMethod.POST)
     @OperationLog(functionModule = FunctionModule.CLIENT, operation = Operation.CLIENT_LOGOUT)
     public void logout() {
-        redisCache.del(Constants.LOGIN_TOKEN_KEY + SecurityUtils.getLoginUser().getToken());
+        redisCache.del(dataKeyBuilder.getKeyWithPrefix(Constants.USER_LOGIN_TOKEN_CACHE_KEY) + SecurityUtils.getLoginUser().getToken());
     }
 
 }

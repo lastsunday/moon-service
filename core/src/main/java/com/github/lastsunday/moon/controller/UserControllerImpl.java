@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
+import com.github.lastsunday.moon.data.component.DataKeyBuilder;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -62,13 +63,15 @@ public class UserControllerImpl implements UserController {
     public static final int INDEX_DATE_END = 1;
 
     @Autowired
-    protected UserMapper userMapper;
+    private UserMapper userMapper;
     @Autowired
-    protected RoleMapper roleMapper;
+    private RoleMapper roleMapper;
     @Autowired
-    protected UserRoleMapper userRoleMapper;
+    private UserRoleMapper userRoleMapper;
     @Autowired
-    protected CacheComponent redisCache;
+    private CacheComponent redisCache;
+    @Autowired
+    private DataKeyBuilder dataKeyBuilder;
 
     @Override
     @RequestMapping(path = "get", method = RequestMethod.POST)
@@ -207,7 +210,7 @@ public class UserControllerImpl implements UserController {
     @Override
     @RequestMapping(path = "online/list", method = RequestMethod.POST)
     public PageResultDTO<UserOnlineDTO> list(@RequestBody @Valid UserOnlineListParamDTO param) {
-        Collection<String> keys = redisCache.getPrefixKeySet(Constants.LOGIN_TOKEN_KEY);
+        Collection<String> keys = redisCache.getPrefixKeySet(dataKeyBuilder.getKeyWithPrefix(Constants.USER_LOGIN_TOKEN_CACHE_KEY));
         List<UserOnlineDTO> userOnlineList = new ArrayList<UserOnlineDTO>();
         String ipaddr = param.getIpaddr();
         String userName = param.getUserName();
@@ -308,7 +311,7 @@ public class UserControllerImpl implements UserController {
     @RequestMapping(path = "online/forceLogout", method = RequestMethod.POST)
     @OperationLog(functionModule = FunctionModule.USER, operation = Operation.USER_FORCE_LOGOUT)
     public void forceLogout(@RequestBody @Valid UserOnlineForceLogoutParamDTO param) {
-        redisCache.del(Constants.LOGIN_TOKEN_KEY + param.getTokenId());
+        redisCache.del(dataKeyBuilder.getKeyWithPrefix(Constants.USER_LOGIN_TOKEN_CACHE_KEY) + param.getTokenId());
     }
 
     private UserOnlineDTO selectOnlineByInfo(String ipaddr, String userName, LoginUser user) {
