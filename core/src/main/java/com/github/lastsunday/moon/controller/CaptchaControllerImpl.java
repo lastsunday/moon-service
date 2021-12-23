@@ -4,6 +4,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Base64;
 
+import com.github.lastsunday.moon.data.component.DataKeyBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +27,9 @@ public class CaptchaControllerImpl implements CaptchaController {
 	@Autowired
 	private CacheComponent cacheComponent;
 
+	@Autowired
+	private DataKeyBuilder dataKeyBuilder;
+
 	@Override
 	@GetMapping
 	public CaptchaResultDTO getCode() throws IOException {
@@ -33,7 +37,7 @@ public class CaptchaControllerImpl implements CaptchaController {
 		String verifyCode = VerifyCodeUtils.generateVerifyCode(4);
 		// 唯一标识
 		String uuid = IdGenerator.genUniqueStringId();
-		String verifyKey = Constants.CAPTCHA_CODE_KEY + uuid;
+		String verifyKey = dataKeyBuilder.getKeyWithPrefix(Constants.CAPTCHA_CODE_CACHE_KEY) + uuid;
 		cacheComponent.putRaw(verifyKey, verifyCode, Constants.CAPTCHA_EXPIRATION.intValue() * 60);
 		// 生成图片
 		int w = 111, h = 36;

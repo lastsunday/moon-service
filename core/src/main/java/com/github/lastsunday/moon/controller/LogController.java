@@ -1,7 +1,8 @@
 package com.github.lastsunday.moon.controller;
 
-import com.github.lastsunday.moon.controller.dto.FileLogGetParamDTO;
-import com.github.lastsunday.moon.controller.dto.FileLogResultDTO;
+
+import com.github.lastsunday.moon.controller.dto.*;
+import com.github.lastsunday.moon.data.domain.dto.OperationLogDTO;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -21,4 +22,7 @@ public interface LogController extends AbstractController, LogExceptionConstant 
     @PreAuthorize("@ss.hasPermission('system:log:get')")
     ResponseEntity<Resource> get(FileLogGetParamDTO param);
 
+    @ApiResponses(value = {@ApiResponse(responseCode = "400", description = DEFAULT_COMMON_EXCEPTION_MESSAGE)})
+    @PreAuthorize("@ss.hasPermission('system:log:list')")
+    PageResultDTO<OperationLogDTO> operationLogList(OperationLogListParamDTO param);
 }

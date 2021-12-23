@@ -7,11 +7,13 @@ public enum FunctionModule {
 	//
 	UNSPECIFIED(0),
 	//
-	USER(1),
+	CLIENT(20000),
 	//
-	ROLE(2),
+	USER(30000),
 	//
-	CLIENT(3);
+	ROLE(40000),
+	//
+	LOG(50000);
 
 	private int code;
 

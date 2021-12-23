@@ -11,7 +11,6 @@ import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.lettuce.LettuceClientConfiguration;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.connection.lettuce.LettucePoolingClientConfiguration;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
 
 @Configuration
@@ -27,133 +26,10 @@ public class RedisAutoConfig {
 	}
 
 	@Bean
-	public RedisTemplate<String, String> redisTemplate(LettuceConnectionFactory defaultLettuceConnectionFactory) {
-		RedisTemplate<String, String> redisTemplate = new RedisTemplate<>();
+	public StringRedisTemplate redisTemplate(LettuceConnectionFactory defaultLettuceConnectionFactory) {
+		StringRedisTemplate redisTemplate = new StringRedisTemplate();
 		redisTemplate.setConnectionFactory(defaultLettuceConnectionFactory);
 		return redisTemplate;
-	}
-
-	@Bean
-	public StringRedisTemplate stringRedisTemplate(LettuceConnectionFactory defaultLettuceConnectionFactory) {
-		StringRedisTemplate stringRedisTemplate = new StringRedisTemplate();
-		stringRedisTemplate.setConnectionFactory(defaultLettuceConnectionFactory);
-		return stringRedisTemplate;
-	}
-
-	/**** 用户SESSION专用数据源 ****/
-	@Bean
-	public LettuceConnectionFactory userLettuceConnectionFactory(RedisStandaloneConfiguration userRedisConfig,
-			@SuppressWarnings("rawtypes") GenericObjectPoolConfig userPoolConfig) {
-		LettuceClientConfiguration clientConfig = LettucePoolingClientConfiguration.builder()
-				.commandTimeout(Duration.ofMillis(5000)).poolConfig(userPoolConfig).build();
-		return new LettuceConnectionFactory(userRedisConfig, clientConfig);
-	}
-
-	@Bean
-	public StringRedisTemplate userRedisTemplate(LettuceConnectionFactory userLettuceConnectionFactory) {
-		StringRedisTemplate redisTemplate = new StringRedisTemplate();
-		redisTemplate.setConnectionFactory(userLettuceConnectionFactory);
-		return redisTemplate;
-	}
-
-	/**** 锁专用数据源 ****/
-	@Bean
-	public LettuceConnectionFactory lockLettuceConnectionFactory(RedisStandaloneConfiguration lockRedisConfig,
-			@SuppressWarnings("rawtypes") GenericObjectPoolConfig lockPoolConfig) {
-		LettuceClientConfiguration clientConfig = LettucePoolingClientConfiguration.builder()
-				.commandTimeout(Duration.ofMillis(5000)).poolConfig(lockPoolConfig).build();
-		return new LettuceConnectionFactory(lockRedisConfig, clientConfig);
-	}
-
-	@Bean
-	public StringRedisTemplate lockRedisTemplate(LettuceConnectionFactory lockLettuceConnectionFactory) {
-		StringRedisTemplate redisTemplate = new StringRedisTemplate();
-		redisTemplate.setConnectionFactory(lockLettuceConnectionFactory);
-		return redisTemplate;
-	}
-
-	@Configuration
-	public static class UserRedisConfig {
-		@Value("${spring.user-redis.host:127.0.0.1}")
-		private String host;
-		@Value("${spring.user-redis.port:6379}")
-		private Integer port;
-		@Value("${spring.user-redis.password:}")
-		private String password;
-		@Value("${spring.user-redis.database:0}")
-		private Integer database;
-
-		@Value("${spring.user-redis.lettuce.pool.max-active:8}")
-		private Integer maxActive;
-		@Value("${spring.user-redis.lettuce.pool.max-idle:8}")
-		private Integer maxIdle;
-		@Value("${spring.user-redis.lettuce.pool.max-wait:-1}")
-		private Long maxWait;
-		@Value("${spring.user-redis.lettuce.pool.min-idle:0}")
-		private Integer minIdle;
-
-		@SuppressWarnings("rawtypes")
-		@Bean
-		public GenericObjectPoolConfig userPoolConfig() {
-			GenericObjectPoolConfig config = new GenericObjectPoolConfig();
-			config.setMaxTotal(maxActive);
-			config.setMaxIdle(maxIdle);
-			config.setMinIdle(minIdle);
-			config.setMaxWaitMillis(maxWait);
-			return config;
-		}
-
-		@Bean
-		public RedisStandaloneConfiguration userRedisConfig() {
-			RedisStandaloneConfiguration config = new RedisStandaloneConfiguration();
-			config.setHostName(host);
-			config.setPassword(RedisPassword.of(password));
-			config.setPort(port);
-			config.setDatabase(database);
-			return config;
-		}
-	}
-
-	@Configuration
-	public static class LockRedisConfig {
-		@Value("${spring.lock-redis.host:127.0.0.1}")
-		private String host;
-		@Value("${spring.lock-redis.port:6379}")
-		private Integer port;
-		@Value("${spring.lock-redis.password:}")
-		private String password;
-		@Value("${spring.lock-redis.database:0}")
-		private Integer database;
-
-		@Value("${spring.lock-redis.lettuce.pool.max-active:8}")
-		private Integer maxActive;
-		@Value("${spring.lock-redis.lettuce.pool.max-idle:8}")
-		private Integer maxIdle;
-		@Value("${spring.lock-redis.lettuce.pool.max-wait:-1}")
-		private Long maxWait;
-		@Value("${spring.lock-redis.lettuce.pool.min-idle:0}")
-		private Integer minIdle;
-
-		@SuppressWarnings("rawtypes")
-		@Bean
-		public GenericObjectPoolConfig lockPoolConfig() {
-			GenericObjectPoolConfig config = new GenericObjectPoolConfig();
-			config.setMaxTotal(maxActive);
-			config.setMaxIdle(maxIdle);
-			config.setMinIdle(minIdle);
-			config.setMaxWaitMillis(maxWait);
-			return config;
-		}
-
-		@Bean
-		public RedisStandaloneConfiguration lockRedisConfig() {
-			RedisStandaloneConfiguration config = new RedisStandaloneConfiguration();
-			config.setHostName(host);
-			config.setPassword(RedisPassword.of(password));
-			config.setPort(port);
-			config.setDatabase(database);
-			return config;
-		}
 	}
 
 	@Configuration
@@ -164,6 +40,11 @@ public class RedisAutoConfig {
 		private Integer port;
 		@Value("${spring.redis.password:}")
 		private String password;
+		/*
+		* When using Redis Cluster, the SELECT command cannot be used, since Redis Cluster only supports database zero.
+		* In the case of a Redis Cluster, having multiple databases would be useless and an unnecessary source of complexity.
+		* Commands operating atomically on a single database would not be possible with the Redis Cluster design and goals.
+		* */
 		@Value("${spring.redis.database:0}")
 		private Integer database;
 

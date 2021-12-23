@@ -4,10 +4,8 @@ import com.github.lastsunday.moon.controller.dto.ClientInfoResultDTO;
 import com.github.lastsunday.moon.controller.dto.ClientLoginParamDTO;
 import com.github.lastsunday.moon.controller.dto.ClientLoginResultDTO;
 import com.github.lastsunday.moon.controller.dto.ClientResetPasswordParamDTO;
-import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.security.SecurityRequirements;
 import io.swagger.v3.oas.annotations.tags.Tag;
 

@@ -42,11 +42,11 @@ import com.github.lastsunday.service.core.CommonException;
 public class RoleControllerImpl implements RoleController {
 
     @Autowired
-    protected RoleMapper roleMapper;
+    private RoleMapper roleMapper;
     @Autowired
-    protected RolePermissionMapper rolePermissionMapper;
+    private RolePermissionMapper rolePermissionMapper;
     @Autowired
-    protected UserRoleMapper userRoleMapper;
+    private UserRoleMapper userRoleMapper;
 
     @Override
     @RequestMapping(path = "get", method = RequestMethod.POST)

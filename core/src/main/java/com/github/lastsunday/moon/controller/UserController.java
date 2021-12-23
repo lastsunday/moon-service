@@ -1,5 +1,8 @@
 package com.github.lastsunday.moon.controller;
 
+import com.github.lastsunday.moon.config.log.OperationLog;
+import com.github.lastsunday.moon.config.log.emun.FunctionModule;
+import com.github.lastsunday.moon.config.log.emun.Operation;
 import com.github.lastsunday.moon.controller.dto.*;
 import com.github.lastsunday.moon.data.domain.dto.UserDTO;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -28,7 +31,7 @@ public interface UserController extends AbstractController, UserExceptionConstan
 
     @ApiResponses(value = {@ApiResponse(responseCode = "400", description = DEFAULT_COMMON_EXCEPTION_MESSAGE + SWAGGER_API_NEWLINE
             + MESSAGE_ENTITY_UPDATE_FAILURE)})
-    @PreAuthorize("@ss.hasPermission('system:user:update')")
+    @OperationLog(functionModule = FunctionModule.USER, operation = Operation.UPDATE)
     void update(UserUpdateParamDTO param);
 
     @ApiResponses(value = {@ApiResponse(responseCode = "400", description = DEFAULT_COMMON_EXCEPTION_MESSAGE + SWAGGER_API_NEWLINE

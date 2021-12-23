@@ -20,20 +20,10 @@ spring:
         enabled: "${MOON_SPRING_LIQUIBASE_ENABLED:true}"
         change-log: "${MOON_SPRING_LIQUIBASE_CHANGE_LOG:classpath:db/changelog/db.changelog-master.xml}"
     redis:
-        database: "${MOON_SPRING_REDIS_DATABASE:4}"
+        database: "${MOON_SPRING_REDIS_DATABASE:0}"
         host: "${MOON_SPRING_REDIS_HOST:localhost}"
         port: "${MOON_SPRING_REDIS_PORT:26379}"
         password: "${MOON_SPRING_REDIS_PASSWORD:}"
-    user-redis:
-        database: "${MOON_SPRING_USER_REDIS_DATABASE:5}"
-        host: "${MOON_SPRING_USER_REDIS_HOST:localhost}"
-        port: "${MOON_SPRING_USER_REDIS_PORT:26379}"
-        password: "${MOON_SPRING_USER_REDIS_PASSWORD:}"
-    lock-redis:
-        database: "${MOON_SPRING_LOCK_REDIS_DATABASE:6}"
-        host: "${MOON_SPRING_LOCK_REDIS_HOST:localhost}"
-        port: "${MOON_SPRING_LOCK_REDIS_PORT:26379}"
-        password: "${MOON_SPRING_LOCK_REDIS_PASSWORD:}"
 #日志配置
 logging:
     file:
@@ -98,6 +88,8 @@ app:
             authHeader: "${MOON_APP_REMOTE_SERVICE_AUTH_HEADER:}"
             #远程服务授权令牌
             authToken: "${MOON_APP_REMOTE_SERVICE_AUTH_TOKEN:}"
+    dataKey:
+        prefix: "${MOON_APP_DATA_KEY_PREFIX:moon:}"
 mybatis:
     config-location: mybatis-config.xml
 mybatis-plus:

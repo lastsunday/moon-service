@@ -13,7 +13,7 @@ import com.github.lastsunday.service.core.security.PermissionManager;
 public class PermissionControllerImpl implements PermissionController {
 
 	@Autowired
-	protected PermissionManager permissionManager;
+	private PermissionManager permissionManager;
 
 	@Override
 	@RequestMapping(path = "listAll", method = RequestMethod.POST)
