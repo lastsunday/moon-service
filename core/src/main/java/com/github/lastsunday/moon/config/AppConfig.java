@@ -1,11 +1,10 @@
 package com.github.lastsunday.moon.config;
 
-
-import com.github.lastsunday.moon.config.app.DataKey;
+import com.github.lastsunday.moon.config.app.Module;
 import com.github.lastsunday.moon.config.app.Remote;
 import com.github.lastsunday.moon.config.app.Service;
 import com.github.lastsunday.moon.config.app.Web;
-import com.github.lastsunday.moon.config.module.Module;
+import com.github.lastsunday.moon.config.app.DataKey;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
